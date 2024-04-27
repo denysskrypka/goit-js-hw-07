@@ -1,43 +1,42 @@
 function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, 0)}`;
+    return `#${Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')}`;
 }
 
-const controls = document.querySelector('#controls');
-const input = controls.querySelector('input');
-const createButton = controls.querySelector('[data-create]');
-const destroyButton = controls.querySelector('[data-destroy]');
-const boxesContainer = document.querySelector('#boxes');
+const controls = document.querySelector("#controls");
+const input = controls.querySelector("input");
+const createBtn = controls.querySelector("[data-create]");
+const destroyBtn = controls.querySelector("[data-destroy]");
+const boxes = document.querySelector("#boxes");
+const fragment = document.createDocumentFragment();
 
-function createBoxes(amount) {
-    const boxes = [];
+function createBoxes() {
+  const boxesQuant = input.value;
 
-    for (let i = 0; i < amount; i++) {
-        const size = 30 + i * 10;
-        const box = document.createElement('div');
-        box.style.width = `${size}px`;
-        box.style.height = `${size}px`;
-        box.style.backgroundColor = getRandomHexColor();
-        boxes.push(box);
-    }
+  if (boxesQuant < 1 || boxesQuant > 100) {
+    alert("Введіть число від 1 до 100");
+    return;
+  }
 
-    boxesContainer.append(...boxes);
+  destroyBoxes();
+
+  let boxSize = 30;
+  for (let i = 0; i < boxesQuant; i++) {
+    const div = document.createElement("div");
+    div.style.width = `${boxSize}px`;
+    div.style.height = `${boxSize}px`;
+    div.style.backgroundColor = getRandomHexColor();
+    fragment.appendChild(div);
+    boxSize += 10;
+  }
+  boxes.appendChild(fragment);
+  input.value = "";
 }
 
 function destroyBoxes() {
-    boxesContainer.innerHTML = '';
+  boxes.innerHTML = "";
 }
 
-createButton.addEventListener('click', () => {
-    const amount = Number(input.value);
-
-    if (amount < 1 || amount > 100) {
-        return;
-    }
-
-    createBoxes(amount);
-    input.value = '';
-});
-
-destroyButton.addEventListener('click', destroyBoxes);
+createBtn.addEventListener("click", createBoxes);
+destroyBtn.addEventListener("click", destroyBoxes);
